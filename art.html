@@ -13,7 +13,7 @@ const ordered=nodes.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y)||a.elevation-b.eleva
 function project(n){return {x:(n.x-n.y)*32*zoom,y:(n.x+n.y)*16*zoom}}
 function resize(){const r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);center()}
 function center(){const p=project(player);ox=canvas.width/2-p.x*devicePixelRatio;oy=canvas.height/2-p.y*devicePixelRatio;draw()}
-function draw(){if(!canvas.width)return;const d=devicePixelRatio||1;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#0e1b16';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.save();ctx.translate(ox,oy);ctx.scale(d,d);
+function draw(){if(!canvas.width)return;const d=devicePixelRatio||1;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#0e1b16';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.save();ctx.imageSmoothingEnabled=false;ctx.translate(ox,oy);ctx.scale(d,d);
 for(const n of ordered){const p=project(n);const x=p.x-32*zoom,y=p.y-16*zoom;const name=n.kind==='SLOPE'?'dirt':((n.x*7+n.y*11)%9===0?'dirt':(n.x+n.y)%4===0?'moss':'grass');const im=images[name];if(im?.complete&&im.naturalWidth)ctx.drawImage(im,x,y,64*zoom,32*zoom);else{ctx.fillStyle='#477c58';ctx.fillRect(x,y,64*zoom,32*zoom)}}
 ctx.strokeStyle='#f2c77b';ctx.lineWidth=Math.max(1,1.2*zoom);ctx.beginPath();for(const e of edges){const a=byId.get(e.a),b=byId.get(e.b),p=project(a),q=project(b);ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y)}ctx.stroke();
 const p=project(player);ctx.fillStyle='#ffed86';ctx.strokeStyle='#263629';ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y-9*zoom,7*zoom,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();
