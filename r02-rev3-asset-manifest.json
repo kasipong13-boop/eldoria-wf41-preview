@@ -1,0 +1,84 @@
+{
+  "schema": "wf41-r02-asset-preparation-v1",
+  "phase": "WF41-P22",
+  "status": "DESIGN_ONLY_NOT_EXTRACTED",
+  "reference": "R02 Rev.3 Organic Terrain approved concept",
+  "baseline": "r02-p21.html",
+  "referenceCanvas": {
+    "width": 256,
+    "height": 224,
+    "units": "illustrative pixels only"
+  },
+  "rules": {
+    "graphNodes": 337,
+    "graphEdges": 416,
+    "unknown": "BLOCKED",
+    "newWalkableNodes": 0,
+    "saveEngine": "UNTOUCHED",
+    "merge": false,
+    "geometryVerified": false,
+    "collisionVerified": false
+  },
+  "assets": [
+    {
+      "id": "r02-upper-landing",
+      "proposedFile": "assets/r02-rev3/upper-landing.png",
+      "status": "NOT_EXTRACTED",
+      "visualLayers": [
+        "irregular grassy plateau",
+        "weathered rock rim",
+        "moss and roots",
+        "erosion blending into slope"
+      ],
+      "joins": [
+        "slope-top"
+      ],
+      "transparentBackground": true
+    },
+    {
+      "id": "r02-slope",
+      "proposedFile": "assets/r02-rev3/slope.png",
+      "status": "NOT_EXTRACTED",
+      "visualLayers": [
+        "eroded uneven soil",
+        "embedded stones",
+        "broken grassy shoulders",
+        "cliff rock strata",
+        "small roots"
+      ],
+      "joins": [
+        "upper-bottom",
+        "lower-top"
+      ],
+      "transparentBackground": true
+    },
+    {
+      "id": "r02-lower-landing",
+      "proposedFile": "assets/r02-rev3/lower-landing.png",
+      "status": "NOT_EXTRACTED",
+      "visualLayers": [
+        "irregular meadow",
+        "soil fading into grass",
+        "stones and moss",
+        "small plants at edges"
+      ],
+      "joins": [
+        "slope-bottom"
+      ],
+      "transparentBackground": true
+    }
+  ],
+  "acceptance": [
+    "three RGBA PNG files with actual transparent alpha",
+    "pixel-level no visible cracks at both joins at native scale",
+    "same pixel scale, isometric axes and lighting across pieces",
+    "no sprite detail suggesting a walkable route outside verified graph",
+    "manual Safari iPhone preview before promotion",
+    "separate physical terrain and collision verification before gameplay use"
+  ],
+  "notes": [
+    "Approved generated Rev.3 concept image is not currently available as a verified byte asset inside the GitHub repository.",
+    "P21 canvas procedural composition cannot be claimed to be the approved Rev.3 image or production PNGs.",
+    "Dimensions and anchor points of future extracted PNGs require actual image measurement; do not infer from P21 256x224 illustrative canvas."
+  ]
+}
