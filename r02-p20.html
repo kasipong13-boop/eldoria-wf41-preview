@@ -1,0 +1,73 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WF41-P20 Natural Terrain Ramp</title><style>
+*{box-sizing:border-box}body{margin:0;background:#102019;color:#f0f3e9;font:14px system-ui}header{padding:14px;background:#243b2d}h1{font-size:19px;margin:0 0 5px}small{color:#c6d6c6}.controls{display:flex;flex-wrap:wrap;gap:8px;padding:10px;background:#203329}button,a{border:1px solid #8aa68b;border-radius:8px;background:#355e46;color:white;padding:10px 13px;font:inherit;text-decoration:none}button[aria-pressed=true]{background:#846a39}canvas{width:100%;height:min(60dvh,550px);min-height:340px;background:#0c1813;display:block;touch-action:none;image-rendering:pixelated}.status,.note{padding:12px;background:#243a2d;line-height:1.5}.note{background:#1c3025;color:#e3d8ac}.key{font-weight:700;color:#f5db9d}</style></head><body>
+<header><h1>WF41-P20 · High-Detail Natural Terrain Ramp</h1><small>R02 · High-detail single-scene pixel-art study · 337 nodes / 416 edges reference · UNKNOWN blocked</small></header>
+<div class="controls"><button id="scene" aria-pressed="true">Natural Ramp</button><button id="grid" aria-pressed="false">Guide OFF</button><button id="plus">＋</button><button id="minus">－</button><button id="center">Center</button><a href="r02-p19.html">เทียบ P19</a></div>
+<canvas id="view"></canvas><div class="status" id="status">Loading P19 concept…</div><div class="note"><span class="key">DESIGN-ONLY:</span> P20 เพิ่มรายละเอียดผิวหิน มอส และหญ้าบนรูปทรง P19 เดิม ภาพนี้เป็นต้นแบบ Pixel Art ที่วาดเป็นภูมิประเทศเดียว ไม่ใช่ Asset PNG สุดท้าย ไม่ได้ตรวจพิกัด H2/H1 จริง ไม่มี Collision, Save Engine หรือการเพิ่ม Node และยังไม่อนุมัติให้เดินผ่าน R02</div>
+<script>
+'use strict';
+const canvas=document.getElementById('view'),ctx=canvas.getContext('2d'),status=document.getElementById('status');
+const scene=document.createElement('canvas');scene.width=256;scene.height=224;const g=scene.getContext('2d');g.imageSmoothingEnabled=false;
+let zoom=1,ox=0,oy=0,guide=false,drag=null;
+function poly(points,color){g.fillStyle=color;g.beginPath();g.moveTo(...points[0]);for(let i=1;i<points.length;i++)g.lineTo(...points[i]);g.closePath();g.fill()}
+function line(points,color,width=1){g.strokeStyle=color;g.lineWidth=width;g.lineJoin='bevel';g.beginPath();g.moveTo(...points[0]);for(let i=1;i<points.length;i++)g.lineTo(...points[i]);g.stroke()}
+let seed=19019;function rand(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}
+function specks(points,colors,count,sz=2){for(let i=0;i<count;i++){let x=0,y=0;const minX=Math.min(...points.map(p=>p[0])),maxX=Math.max(...points.map(p=>p[0])),minY=Math.min(...points.map(p=>p[1])),maxY=Math.max(...points.map(p=>p[1]));for(let t=0;t<30;t++){x=Math.floor(minX+rand()*(maxX-minX));y=Math.floor(minY+rand()*(maxY-minY));let inside=false;for(let a=0,b=points.length-1;a<points.length;b=a++){const p=points[a],q=points[b];if((p[1]>y)!==(q[1]>y)&&x<(q[0]-p[0])*(y-p[1])/(q[1]-p[1])+p[0])inside=!inside}if(inside)break}g.fillStyle=colors[Math.floor(rand()*colors.length)];g.fillRect(x,y,1+Math.floor(rand()*sz),1+Math.floor(rand()*sz))}}
+function makeArt(){
+g.clearRect(0,0,256,224);seed=19019;
+const leftFace=[[24,63],[80,90],[80,125],[24,97]],rightFace=[[80,90],[129,64],[129,98],[80,125]];
+poly(leftFace,'#343d30');poly(rightFace,'#484939');
+specks(leftFace,['#515240','#63634b','#80775b'],75);specks(rightFace,['#62634b','#7c7357','#383c30'],80);
+const upper=[[24,63],[79,36],[129,64],[80,90]];
+poly(upper,'#62894a');specks(upper,['#7c9c55','#87a95b','#486d3d','#b6b273'],120);
+const lower=[[80,162],[130,136],[187,164],[137,192]];
+poly([[80,162],[137,192],[137,209],[80,179]],'#41463a');poly([[137,192],[187,164],[187,181],[137,209]],'#515343');
+poly(lower,'#64874c');specks(lower,['#7e9d58','#91a65e','#425e39','#b8a16e'],145);
+// Ground flanks at ramp: one coherent cliff face, then surface and shoulders.
+const leftCliff=[[80,90],[105,78],[119,135],[106,153],[80,162],[80,125]];
+const rightCliff=[[105,78],[129,64],[160,135],[187,164],[160,173],[119,135]];
+poly(leftCliff,'#4a4a37');poly(rightCliff,'#555440');
+specks(leftCliff,['#727055','#777458','#393f31','#8d825f'],90);
+specks(rightCliff,['#716b50','#8c805b','#444b39'],120);
+// Ramp is a connected sloped terrain surface, not a stroke over existing separate sprites.
+const ramp=[[68,67],[83,60],[107,80],[121,105],[135,128],[151,151],[166,159],[150,169],[137,163],[120,143],[106,122],[92,101]];
+poly(ramp,'#9b7449');line([[68,67],[83,60],[107,80],[121,105],[135,128],[151,151],[166,159]],'#587545',4);
+line([[92,101],[106,122],[120,143],[137,163],[150,169]],'#486a3e',3);
+const core=[[76,68],[83,66],[102,84],[115,109],[131,134],[149,157],[155,160],[149,163],[132,155],[114,132],[100,108],[88,88]];
+poly(core,'#b58c58');specks(core,['#c9a572','#9a7145','#d0ad76','#8c6b48'],90,2);
+// Irregular natural grassy shoulders with small clusters
+for(const [x,y] of [[70,77],[78,85],[92,103],[107,123],[120,139],[136,153],[157,165],[112,85],[128,115],[148,146]]){
+g.fillStyle='#628a49';g.fillRect(x-3,y,3,2);g.fillStyle='#89a75b';g.fillRect(x-1,y-2,2,2)}
+line([[24,63],[79,36],[129,64]],'#9caf66',1);line([[80,162],[130,136],[187,164]],'#9caf66',1);
+
+// P20 surface-only details. P19 silhouettes and ramp polygons above remain unchanged.
+function clipped(points,fn){g.save();g.beginPath();g.moveTo(...points[0]);for(let i=1;i<points.length;i++)g.lineTo(...points[i]);g.closePath();g.clip();fn();g.restore()}
+function mossPatch(x,y){g.fillStyle='#456a3b';g.fillRect(x,y,5,2);g.fillStyle='#789a50';g.fillRect(x+1,y-1,3,1);g.fillStyle='#a3b36b';g.fillRect(x+3,y,1,1)}
+function grassTuft(x,y){g.fillStyle='#365d37';g.fillRect(x,y-3,1,4);g.fillRect(x+2,y-2,1,3);g.fillStyle='#a5b96b';g.fillRect(x+1,y-4,1,3);g.fillRect(x+3,y-1,1,2)}
+function rockChip(x,y){g.fillStyle='#303c35';g.fillRect(x,y,5,3);g.fillStyle='#9b9b76';g.fillRect(x+1,y-1,3,2);g.fillStyle='#c0b48b';g.fillRect(x+2,y-1,1,1)}
+for(const face of [leftFace,rightFace,leftCliff,rightCliff]){
+clipped(face,()=>{for(let i=0;i<48;i++){const x=Math.floor(18+rand()*177),y=Math.floor(55+rand()*127);g.fillStyle=['#353e34','#77745b','#8d8264','#5e614a'][Math.floor(rand()*4)];g.fillRect(x,y,2+Math.floor(rand()*6),1+Math.floor(rand()*2))}});
+}
+for(const [x,y] of [[38,83],[51,90],[63,102],[88,111],[99,135],[113,147],[134,106],[148,125],[162,150],[172,162]]){rockChip(x,y)}
+for(const [x,y] of [[42,54],[55,49],[96,53],[111,64],[92,77],[96,148],[111,155],[151,175],[167,167],[137,181]]){mossPatch(x,y)}
+for(const [x,y] of [[35,59],[48,57],[101,57],[112,72],[91,157],[111,171],[154,177],[177,166]]){grassTuft(x,y)}
+// Edge grass encroachment, restrained to small pixel tufts; no new overlay path.
+for(const [x,y] of [[70,68],[79,73],[91,92],[103,112],[119,137],[141,155],[159,160],[91,99],[108,123],[130,145]]){grassTuft(x,y)}
+// A few stone fragments and dirt highlights along the existing core.
+for(const [x,y] of [[88,79],[98,95],[108,114],[124,135],[143,154]]){g.fillStyle='#dbc18b';g.fillRect(x,y,3,1);g.fillStyle='#765b40';g.fillRect(x+1,y+2,2,1)}
+// Sparse roots and natural cracks in cliff faces, without changing their geometry.
+line([[33,86],[41,88],[44,93],[50,95]],'#303b32',1);
+line([[105,109],[110,116],[109,124],[115,130]],'#333c32',1);
+line([[153,137],[158,145],[164,149]],'#343f35',1);
+
+if(guide){line([[80,90],[129,64]],'#f4d88c',1);line([[80,162],[130,136]],'#f4d88c',1);g.fillStyle='#ffe3a2';g.font='8px monospace';g.fillText('H2? illustrative',24,29);g.fillText('H1? illustrative',146,198);g.fillText('R02?',111,118)}
+}
+function draw(){if(!canvas.width)return;const d=devicePixelRatio||1;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=false;const size= Math.min(canvas.width/256,canvas.height/224)*zoom;ctx.drawImage(scene,ox-128*size,oy-112*size,256*size,224*size)}
+function center(){ox=canvas.width/2;oy=canvas.height/2;draw()}
+function resize(){const r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);center()}
+document.getElementById('grid').onclick=()=>{guide=!guide;document.getElementById('grid').setAttribute('aria-pressed',String(guide));document.getElementById('grid').textContent='Guide '+(guide?'ON':'OFF');makeArt();draw()};
+document.getElementById('plus').onclick=()=>{zoom=Math.min(3,zoom*1.25);draw()};document.getElementById('minus').onclick=()=>{zoom=Math.max(.6,zoom*.8);draw()};document.getElementById('center').onclick=()=>{zoom=1;center()};
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,ox,oy}});
+canvas.addEventListener('pointermove',e=>{if(!drag)return;const d=devicePixelRatio||1;ox=drag.ox+(e.clientX-drag.x)*d;oy=drag.oy+(e.clientY-drag.y)*d;draw()});
+canvas.addEventListener('pointerup',()=>drag=null);canvas.addEventListener('pointercancel',()=>drag=null);
+addEventListener('resize',resize);makeArt();resize();status.textContent='P20 detail study rendered · single 256×224 pixel scene · graph unchanged';
+</script></body></html>
