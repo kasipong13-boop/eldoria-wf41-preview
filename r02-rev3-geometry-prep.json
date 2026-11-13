@@ -1,0 +1,60 @@
+{
+  "schema": "wf41-r02-rev3-geometry-prep-v1",
+  "phase": "WF41-P23-GEOMETRY",
+  "scope": "design-only",
+  "approvedArtReference": "R02 Rev.3 Master Concept",
+  "sourceInspection": {
+    "conceptImageWidth": 772,
+    "conceptImageHeight": 670,
+    "mode": "RGB",
+    "cleanSource": false,
+    "reason": "Approved PNG is a cropped composite with annotation text and detail callout overlays; no source alpha or isolated terrain. A new clean unannotated source is required before actual segmentation."
+  },
+  "sceneSpace": {
+    "status": "PROVISIONAL",
+    "conceptImagePixels": true,
+    "logicalMapGrid": "NOT_MAPPED",
+    "pixelArtNativeResolution": "NOT_VERIFIED",
+    "isometricProjection": "VISUAL_ONLY_NOT_CALIBRATED",
+    "h2h1Heights": "UNVERIFIED"
+  },
+  "componentPlan": [
+    {
+      "id": "upper",
+      "role": "upper plateau and top entry",
+      "split": "overlap masked at upper-to-slope seam",
+      "anchors": "TBD from clean master"
+    },
+    {
+      "id": "slope",
+      "role": "continuous eroded path and cliff sides",
+      "split": "overlap masked at both ends",
+      "anchors": "TBD from clean master"
+    },
+    {
+      "id": "lower",
+      "role": "lower landing and dispersing soil",
+      "split": "overlap masked at slope-to-lower seam",
+      "anchors": "TBD from clean master"
+    }
+  ],
+  "validationGates": [
+    "clean unannotated RGBA master",
+    "measured image bounds and pixel scale",
+    "isometric axis and anchor calibration",
+    "three source-derived RGBA segments with retained overlaps",
+    "recomposition diff test at original master pixel scale",
+    "edge halo alpha test",
+    "Safari visual approval",
+    "separate terrain collision and H2/H1 verification"
+  ],
+  "safety": {
+    "referenceNodes": 337,
+    "referenceEdges": 416,
+    "unknownBlocked": true,
+    "graphFixtureEdited": false,
+    "saveEngineEdited": false,
+    "mainGameEdited": false,
+    "merge": false
+  }
+}
